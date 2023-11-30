@@ -1,4 +1,4 @@
-package exam01;
+package exam02;
 
 import exam02.Student;
 

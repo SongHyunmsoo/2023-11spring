@@ -11,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode*/
 @Data // @Gatter @Setter @ToString @EqualsAndHashCode
 
-public class book {
+public class Book {
 
     private final String Title;
    // private String Title;
