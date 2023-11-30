@@ -10,10 +10,11 @@ import lombok.*;
 /*@RequiredArgsConstructor
 @EqualsAndHashCode*/
 @Data // @Gatter @Setter @ToString @EqualsAndHashCode
+
 public class book {
 
     private final String Title;
-
+   // private String Title;
     @NonNull
 
     private String Author;
