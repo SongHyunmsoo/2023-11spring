@@ -8,6 +8,9 @@ public class Book {
 
     private Book() {};
 
+    public static Builder builder() {
+        return new Builder();
+    }
     @Override
     public String toString() {
         return "Book{" +
@@ -17,8 +20,8 @@ public class Book {
                 '}';
     }
 
-    private static class Builder{
-        private Book instance = new Book();
+    protected static class Builder{
+        private Book instance  = new Book();
 
         public Builder title(String title) {
             instance.title = title;
