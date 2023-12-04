@@ -5,7 +5,6 @@
                       https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
                  version="6.0">
     <servlet>
-
         <servlet-name>hello-servlet</servlet-name>
         <servlet-class>servlets.HelloServlet</servlet-class>
     </servlet>
@@ -14,4 +13,12 @@
         <url-pattern>/hello</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>board-servlet</servlet-name>
+        <servlet-class>servlets.BoardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>board-servlet</servlet-name>
+        <url-pattern>/board</url-pattern>
+    </servlet-mapping>
 </web-app>
