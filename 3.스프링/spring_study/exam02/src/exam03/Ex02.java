@@ -1,4 +1,4 @@
-package ex03;
+package exam03;
 
 public class Ex02 {
     public static void main(String[] args) {
@@ -10,6 +10,11 @@ public class Ex02 {
 
         for (Animal animal : animals) {
             animal.move();
+
+            if(animal instanceof Human) {
+                Human human = (Human) animal;
+                human.readBook();
+            }
         }
     }
 }

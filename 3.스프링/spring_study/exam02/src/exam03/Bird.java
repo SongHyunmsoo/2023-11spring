@@ -1,4 +1,4 @@
-package ex03;
+package exam03;
 
 public class Bird extends Animal{
     public void move(){
