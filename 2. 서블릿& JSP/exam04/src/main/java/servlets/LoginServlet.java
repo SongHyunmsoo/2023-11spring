@@ -13,10 +13,12 @@ import java.io.IOException;
 //@WebServlet("/member/login")
 public class LoginServlet extends HttpServlet {
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws
+            ServletException, IOException {
 
 
-        RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/templates/member/Login.jsp");
+        RequestDispatcher rd = req.getRequestDispatcher(
+                "/WEB-INF/templates/member/Login.jsp");
         rd.forward(req, resp);
 
     }
