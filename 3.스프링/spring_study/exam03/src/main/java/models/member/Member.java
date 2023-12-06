@@ -13,5 +13,5 @@ public class Member {
     private String userNm;
 
     private LocalDateTime regDt;
-    private String regDtstr;
+    private String regDtStr;
 }

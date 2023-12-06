@@ -4,9 +4,11 @@ import commons.exceptions.BadRequestException;
 import commons.valdators.RequiredValidator;
 import commons.valdators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class JoinValidator implements Validator<Member>, RequiredValidator {
             @Autowired
+            @Qualifier("memberDao")
             private MemberDao memberDao;
             // 멤버 Dao 기능 확장을 위해서 구성 요소로서 확장하는 코드
 

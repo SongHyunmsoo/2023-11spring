@@ -1,29 +1,40 @@
 package models.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.lang.Nullable;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ListService {
 
-    private  MemberDao memberDao;
+    private MemberDao memberDao;
 
-    private DateTimeFormatter formatter;
-    @Autowired
-    public void setFormatter(DateTimeFormatter formatter){
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
+
+    @Autowired(required = false)
+    //@Autowired
+    public void setFormatter( DateTimeFormatter formatter) {
         this.formatter = formatter;
     }
-    @Autowired
 
-    public void setMemberDao(MemberDao memberDao) {
+    @Autowired
+    public void setMemberDao(@Qualifier("memberDao")MemberDao memberDao) {
+
         this.memberDao = memberDao;
     }
+
     public void print() {
         List<Member> members = memberDao.getList();
         for (Member member : members) {
-            String regDistr = formatter.format(member.getRegDt());
-            member.setRegDtstr(regDistr);
+            if (formatter != null) {
+                String regDtStr = formatter.format(member.getRegDt());
+                member.setRegDtStr(regDtStr);
+            }
+
             System.out.println(member);
         }
     }
