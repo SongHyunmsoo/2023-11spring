@@ -3,23 +3,18 @@ package models.member;
 public class JoinService {
 
     private MemberDao memberDao;
-    // Dao 의존성 주입
     private JoinValidator validator;
-    // JoinValidator 의존성 주입
 
     public JoinService(MemberDao memberDao, JoinValidator validator) {
         this.memberDao = memberDao;
-        this.validator  = validator;
+        this.validator = validator;
     }
 
-    public void join(Member member){
-        validator.validate(member);
+    public void join(Member member) {
         // 데이터 검증
+        validator.validate(member);
 
-        memberDao.register(member);
         // 데이터 추가
+        memberDao.register(member);
     }
-
-
-
 }
