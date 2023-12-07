@@ -11,10 +11,10 @@ public class ProxyCalculator implements Calculator{
     @Override
     public long factorial(long num) {
 
-        long stime = System.nanoTime();
+        long stime = System.nanoTime(); // 핵심 기능을 대신 수행
         try {
 
-            //핵심기능
+            //핵심 기능을 대신 수행
             long result = calculator.factorial(num);
 
             return result;
