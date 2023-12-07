@@ -14,4 +14,5 @@ public class Member {
 
     private LocalDateTime regDt;
     private String regDtStr;
+
 }

@@ -9,24 +9,23 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class AppCtx3 {
-
     @Bean
     //@Primary
-    public MemberDao memberDao()
-    {
+    public MemberDao memberDao() {
 
         return new MemberDao();
-
     }
+    /*
     @Bean
-    public MemberDao memberDao2(){
+    public MemberDao memberDao2() {
+
         return new MemberDao();
     }
+    */
     //@Bean
-    public DateTimeFormatter formatter(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy,MM.dd HH:mm");
+    public DateTimeFormatter formatter() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
         return formatter;
     }
-
 }

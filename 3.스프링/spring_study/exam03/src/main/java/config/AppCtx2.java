@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({AppCtx3.class})
+@Import(AppCtx3.class)
 public class AppCtx2 {
-
 
     @Bean
     public JoinValidator joinValidator() {

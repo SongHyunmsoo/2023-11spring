@@ -3,26 +3,27 @@ package models.member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Pattern;
 
+@Service
 public class ListService {
 
     private MemberDao memberDao;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
 
-    @Autowired(required = false)
-    //@Autowired
-    public void setFormatter( DateTimeFormatter formatter) {
+    //@Autowired(required = false)
+    @Autowired
+    public void setFormatter(@Nullable DateTimeFormatter formatter) {
         this.formatter = formatter;
     }
 
     @Autowired
-    public void setMemberDao(@Qualifier("memberDao")MemberDao memberDao) {
+    public void setMemberDao(MemberDao memberDao) {
 
         this.memberDao = memberDao;
     }
