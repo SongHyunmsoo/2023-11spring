@@ -10,9 +10,7 @@
         <init-param>
             <param-name>contextClass</param-name>
             <param-value>
-                org.springframework.web.context.support
-                .AnnotationConfigWebApplicationContext
-                <!--웹에 특화된 컨테이너-->
+                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
             </param-value>
         </init-param>
         <init-param>
@@ -22,7 +20,6 @@
                 configs.ControllerConfig
             </param-value>
         </init-param>
-
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
@@ -41,6 +38,6 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/*</url-pattern><!--모든 요청-->
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>
