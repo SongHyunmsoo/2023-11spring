@@ -1,5 +1,6 @@
 package configs;
 
+import commons.Utils;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,16 +20,24 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private ApplicationContext applicationContext;
+
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
         // 모든 요청 -> 컨트롤러 빈, 없는 경우 -> 정적 자원 경로(css, js, 이미지)
+
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("/**") // 모든 경로
                 .addResourceLocations("classpath:/static/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/")
+                .setViewName("main/index");
     }
 
     @Bean
@@ -38,8 +47,9 @@ public class MvcConfig implements WebMvcConfigurer {
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setCacheable(false);
-        // true -> 최초로 로딩시 번역, 다음 요청시에는 기존 파일을 그대로 사용( 실 사용중 서버)
-        // false -> 매번 요청시마다 다시 번역( 개발 중)
+        // true -> 최초 로딩시 번역, 다음 요청시에는 기존 파일을 그대로 사용 (실 사용중 서버)
+        // false -> 매번 요청시마다 다시 번역 (개발 중)
+
         return templateResolver;
     }
 
@@ -48,8 +58,7 @@ public class MvcConfig implements WebMvcConfigurer {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
-        templateEngine.addDialect(new Java8TimeDialect()); // date Time API(java
-        //.time 패키지) -#temporals
+        templateEngine.addDialect(new Java8TimeDialect()); // Date Time API(java.time 패키지) - #temporals
         templateEngine.addDialect(new LayoutDialect()); // 레이아웃 기능 추가
         return templateEngine;
     }
@@ -57,8 +66,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public ThymeleafViewResolver thymeleafViewResolver() {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setContentType("text/html"); // 헤더에서 타입부분
-        resolver.setCharacterEncoding("utf-8"); // 헤더에서 인코딩부분
+        resolver.setContentType("text/html");
+        resolver.setCharacterEncoding("utf-8");
         resolver.setTemplateEngine(templateEngine());
         return resolver;
     }
@@ -67,6 +76,7 @@ public class MvcConfig implements WebMvcConfigurer {
     public void configureViewResolvers(ViewResolverRegistry registry) {
         registry.viewResolver(thymeleafViewResolver());
     }
+
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
@@ -74,5 +84,10 @@ public class MvcConfig implements WebMvcConfigurer {
         ms.setBasenames("messages.commons");
 
         return ms;
+    }
+
+    @Bean
+    public Utils utils() {
+        return new Utils();
     }
 }
