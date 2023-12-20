@@ -1,0 +1,575 @@
+Index: ../../3.스프링/spring_study/exam07/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'java'\r\n}\r\n\r\ngroup = 'org.choongang'\r\nversion = '1.0-SNAPSHOT'\r\n\r\njava {\r\n    sourceCompatibility = '17'\r\n}\r\n\r\nrepositories {\r\n    mavenCentral()\r\n}\r\n\r\ndependencies {\r\n    def spring_version = '6.1.1';\r\n\r\n    implementation \"org.springframework:spring-webmvc:$spring_version\"\r\n    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'\r\n    compileOnly 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.1'\r\n\r\n    runtimeOnly 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'\r\n    implementation 'com.oracle.database.nls:orai18n:23.3.0.23.09'\r\n\r\n    implementation \"org.springframework:spring-jdbc:$spring_version\"\r\n    implementation 'org.apache.tomcat:tomcat-jdbc:10.1.16'\r\n\r\n    implementation 'org.mybatis:mybatis:3.5.14'\r\n    implementation 'org.mybatis:mybatis-spring:3.0.3'\r\n\r\n    implementation 'org.slf4j:slf4j-api:2.0.9'\r\n    implementation 'ch.qos.logback:logback-classic:1.4.14'\r\n\r\n    implementation 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'\r\n    implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'\r\n    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'\r\n\r\n\r\n    compileOnly 'org.projectlombok:lombok:1.18.30'\r\n    annotationProcessor 'org.projectlombok:lombok:1.18.30'\r\n\r\n    testImplementation platform('org.junit:junit-bom:5.10.1')\r\n    testImplementation 'org.junit.jupiter:junit-jupiter'\r\n}\r\n\r\ntest {\r\n    useJUnitPlatform()\r\n}
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/build.gradle b/../../3.스프링/spring_study/exam07/build.gradle
+--- a/../../3.스프링/spring_study/exam07/build.gradle	
++++ b/../../3.스프링/spring_study/exam07/build.gradle	
+@@ -36,6 +36,9 @@
+     implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
+     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
+ 
++    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
++    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
++
+ 
+     compileOnly 'org.projectlombok:lombok:1.18.30'
+     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html.bak
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <title>회원가입</title>\r\n    </head>\r\n    <body>\r\n        <th:block th:objext=\"${member}\">\r\n        <h1 th:text=\"${pageTitle}\"></h1>\r\n        <div th:text=\"*{#messages.msg('LOGIN_MSG',userNm,userId)}\"></div>\r\n        <a th:href=\"@{/member/login(userId=*{userId}, userNm=*{userNm})}\" >로그인</a>\r\n\r\n        <a th:href=\"@{/member/info/{id}(id=*{userId})}\">회원정보</a>\r\n\r\n\r\n        <dl>\r\n            <dt th:text=\"#{아이디}\"></dt>\r\n            <dd>[[*{userId}]]</dd>\r\n        </dl>\r\n        <dl>\r\n            <dt th:text=\"#{회원명}\"></dt>\r\n            <dd th:utext=\"*{userNm}\">이이름</dd>\r\n        </dl>\r\n        </th:block>\r\n    </body>\r\n</html>
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html.bak b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html.bak
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html.bak	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html.bak	
+@@ -5,22 +5,21 @@
+         <title>회원가입</title>
+     </head>
+     <body>
+-        <th:block th:objext="${member}">
+-        <h1 th:text="${pageTitle}"></h1>
+-        <div th:text="*{#messages.msg('LOGIN_MSG',userNm,userId)}"></div>
+-        <a th:href="@{/member/login(userId=*{userId}, userNm=*{userNm})}" >로그인</a>
++        <th:block th:object="${member}">
++            <h1 th:text="${pageTitle}"></h1>
++            <div th:text="*{#messages.msg('LOGIN_MSG', userNm, userId)}"></div>
++            <a th:href="@{/member/login(userId=*{userId}, userNm=*{userNm})}">로그인</a>
+ 
+-        <a th:href="@{/member/info/{id}(id=*{userId})}">회원정보</a>
++           <a th:href="@{/member/info/{id}(id=*{userId})}">회원정보</a>
+ 
+-
+-        <dl>
+-            <dt th:text="#{아이디}"></dt>
+-            <dd>[[*{userId}]]</dd>
+-        </dl>
+-        <dl>
+-            <dt th:text="#{회원명}"></dt>
+-            <dd th:utext="*{userNm}">이이름</dd>
+-        </dl>
++            <dl>
++                <dt th:text="#{아이디}"></dt>
++                <dd>[[*{@utils.toUpper(userId)}]]</dd>
++            </dl>
++            <dl>
++                <dt th:text="#{회원명}"></dt>
++                <dd th:utext="*{userNm}">이이름</dd>
++            </dl>
+         </th:block>
+     </body>
+ </html>
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/list.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\">\r\n    <body>\r\n        <table border=\"1\">\r\n            <thead>\r\n                <tr>\r\n                    <th>순번</th>\r\n                    <th>아이디</th>\r\n                    <th>회원명</th>\r\n                    <th>이메일</th>\r\n                    <th>가입일시</th>\r\n                </tr>\r\n            </thead>\r\n        <tbody>\r\n            <tr th:each=\"member, status : ${members}\" th:object=\"${member}\">\r\n                    <!-- 넣어주는것이 왼쪽에서 오른쪽이기 떄문에 오브젝트는 뒤어 써야한다.-->\r\n                    <!--<td th:text=\"${status.index}\"></td>>-->\r\n                <td>\r\n                    <th:block th:text=\"${status.count}\"></th:block>\r\n                    [<th:block th:text=\"${status.first}\"></th:block>]\r\n                    [<th:block th:text=\"${status.last}\"></th:block>]\r\n                        <!--\r\n                        <span th:if=\"${status.even}\">짝수</span>\r\n                        <span th:unless=\"${status.even}\">홀수</span>-->\r\n                       <th:block th:switch=\"${status.even}\">\r\n                            <span th:case=\"true\">짝수</span>\r\n                            <span th:case=\"false\">홀수</span>\r\n                       </th:block>\r\n                </td>\r\n                    <td th:text=\"*{userId}\"></td>\r\n                    <td th:text=\"*{#strings.concat(userNm,'(' + userId+')')}\"></td>\r\n                    <td th:text=\"*{email}\"></td>\r\n                    <td th:text=\"*{#temporals.format(regDt, 'yyyy.MM.dd HH:mm')}\"></td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n        <div th:text=\"${#numbers.formatInteger(1000000000,3,'COMMA')}\"></div>\r\n        <th:block th:each=\"num : ${#numbers.sequence(1,10)}\">\r\n            <h1 th:text=\"${num}\"></h1>\r\n        </th:block>\r\n    </body>\r\n</html>
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/list.html b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/list.html
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/list.html	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/list.html	
+@@ -1,42 +1,41 @@
+ <!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org">
+-    <body>
+-        <table border="1">
+-            <thead>
+-                <tr>
+-                    <th>순번</th>
+-                    <th>아이디</th>
+-                    <th>회원명</th>
+-                    <th>이메일</th>
+-                    <th>가입일시</th>
+-                </tr>
+-            </thead>
+-        <tbody>
+-            <tr th:each="member, status : ${members}" th:object="${member}">
+-                    <!-- 넣어주는것이 왼쪽에서 오른쪽이기 떄문에 오브젝트는 뒤어 써야한다.-->
+-                    <!--<td th:text="${status.index}"></td>>-->
+-                <td>
+-                    <th:block th:text="${status.count}"></th:block>
+-                    [<th:block th:text="${status.first}"></th:block>]
+-                    [<th:block th:text="${status.last}"></th:block>]
+-                        <!--
+-                        <span th:if="${status.even}">짝수</span>
+-                        <span th:unless="${status.even}">홀수</span>-->
+-                       <th:block th:switch="${status.even}">
+-                            <span th:case="true">짝수</span>
+-                            <span th:case="false">홀수</span>
+-                       </th:block>
+-                </td>
+-                    <td th:text="*{userId}"></td>
+-                    <td th:text="*{#strings.concat(userNm,'(' + userId+')')}"></td>
+-                    <td th:text="*{email}"></td>
+-                    <td th:text="*{#temporals.format(regDt, 'yyyy.MM.dd HH:mm')}"></td>
+-                </tr>
+-            </tbody>
+-        </table>
+-        <div th:text="${#numbers.formatInteger(1000000000,3,'COMMA')}"></div>
+-        <th:block th:each="num : ${#numbers.sequence(1,10)}">
+-            <h1 th:text="${num}"></h1>
+-        </th:block>
+-    </body>
++<body>
++<table border="1">
++    <thead>
++    <tr>
++        <th>순번</th>
++        <th>아이디</th>
++        <th>회원명</th>
++        <th>이메일</th>
++        <th>가입일시</th>
++    </tr>
++    </thead>
++    <tbody>
++    <tr th:each="member, status : ${members}" th:object="${member}">
++        <!-- <td th:text="${status.index}"></td>-->
++        <td>
++            <th:block th:text="${status.count}"></th:block>
++            [<th:block th:text="${status.first}"></th:block>]
++            [<th:block th:text="${status.last}"></th:block>]
++            <!--
++            <span th:if="${status.even}">짝수</span>
++            <span th:unless="${status.even}">홀수</span>-->
++            <th:block th:switch="${status.even}">
++                <span th:case="true">짝수</span>
++                <span th:case="false">홀수</span>
++            </th:block>
++        </td>
++        <td th:text="*{userId}"></td>
++        <td th:text="*{#strings.concat(userNm, '(' + userId +')')}"></td>
++        <td th:text="*{email}"></td>
++        <td th:text="*{#temporals.format(regDt, 'yyyy.MM.dd HH:mm')}"></td>
++    </tr>
++    </tbody>
++</table>
++<div th:text="${#numbers.formatInteger(100000000, 3, 'COMMA')}"></div>
++<th:block th:each="num : ${#numbers.sequence(1, 10)}">
++    <h1 th:text="${num}"></h1>
++</th:block>
++</body>
+ </html>
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/java/controllers/member/MemberController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controllers.member;\r\n\r\nimport models.member.Member;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\n\r\nimport java.time.LocalDateTime;\r\nimport java.util.ArrayList;\r\nimport java.util.Arrays;\r\nimport java.util.List;\r\n\r\n@Controller\r\npublic class MemberController {\r\n\r\n    @GetMapping(\"/member/join\")\r\n    public String join(Model model) {\r\n\r\n      String[] addCss = {\"member/style1\",\"member/style2\"};\r\n      List<String> addScript = Arrays.asList(\"member/script1\",\"member/script2\");\r\n\r\n      model.addAttribute(\"addCss\",addCss);\r\n      model.addAttribute(\"addScript\", addScript);\r\n\r\n      return \"member/join\";\r\n\r\n    }\r\n\r\n    @PostMapping(\"/member/join\")\r\n    public String joinPs(RequestJoin form) {\r\n        System.out.println(form);\r\n\r\n        return \"member/join\";\r\n    }\r\n\r\n    @GetMapping(\"/member/login\")\r\n    public String login() {\r\n\r\n        return \"member/login\";\r\n    }\r\n\r\n    @PostMapping(\"/member/login\")\r\n    public String loginPs(RequestLogin form) {\r\n\r\n        System.out.println(form);\r\n\r\n        return \"member/login\";\r\n    }\r\n    @GetMapping(\"/member/list\")\r\n    public String members(Model model){\r\n\r\n        List<Member> members = new ArrayList<>();\r\n        for (int i = 1; i <=10; i++) {\r\n            Member member = Member.builder()\r\n                    .userNo(Long.valueOf(i))\r\n                    .userPw(\"1234\")\r\n                    .userId(\"user\"+i)\r\n                    .userNm(\"사용자\"+i)\r\n                    .email(\"user\"+i+\"@test.org\")\r\n                    .regDt(LocalDateTime.now())\r\n                    .build();\r\n            members.add(member);\r\n        }\r\n        model.addAttribute(\"members\",members);\r\n\r\n        return \"member/list\";\r\n    }\r\n}
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/MemberController.java b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/MemberController.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/MemberController.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/MemberController.java	
+@@ -1,10 +1,12 @@
+ package controllers.member;
+ 
++import jakarta.validation.Valid;
++import lombok.RequiredArgsConstructor;
+ import models.member.Member;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.validation.Errors;
++import org.springframework.web.bind.annotation.*;
+ 
+ import java.time.LocalDateTime;
+ import java.util.ArrayList;
+@@ -12,57 +14,78 @@
+ import java.util.List;
+ 
+ @Controller
++@RequestMapping("/member")
++@RequiredArgsConstructor
+ public class MemberController {
+ 
+-    @GetMapping("/member/join")
+-    public String join(Model model) {
+-
+-      String[] addCss = {"member/style1","member/style2"};
+-      List<String> addScript = Arrays.asList("member/script1","member/script2");
+-
+-      model.addAttribute("addCss",addCss);
+-      model.addAttribute("addScript", addScript);
+-
+-      return "member/join";
++    private final Joinvalidator joinValidator;
+ 
++    @ModelAttribute("hobbies")
++    public List<String> hobbies() {
++        return Arrays.asList("자바", "오라클", "JSP", "스프링");
+     }
+ 
+-    @PostMapping("/member/join")
+-    public String joinPs(RequestJoin form) {
+-        System.out.println(form);
++    @GetMapping("/join") // /member/join
++    public String join(@ModelAttribute RequestJoin form, Model model) {
++
++        //model.addAttribute("requestJoin", new RequestJoin());
++        model.addAttribute("pageTitle", "회원가입");
+ 
+         return "member/join";
+     }
+ 
+-    @GetMapping("/member/login")
++
++    @PostMapping("/join") // /member/join
++    public String joinPs(@Valid RequestJoin form, Errors errors, Model model) {
++
++
++        joinValidator.validate(form, errors);
++
++        if (errors.hasErrors()){ // 검증 실패시
++
++            return  "members/join";
++        }
++
++
++        // 커맨객체 RequestJoin  -> requestJoin 이름으로 속성이 추가 -> 템플릿 내에서 바로 접근 가능
++        // response.sendRedirect(request.getContextPath() + "/member/login")
++        // Location: 주소
++        return "redirect:/member/login";
++
++    }
++
++
++    @GetMapping("/login") // /member/login
+     public String login() {
+ 
+         return "member/login";
+     }
+ 
+-    @PostMapping("/member/login")
++    @PostMapping("/login") // /member/login
+     public String loginPs(RequestLogin form) {
+ 
+         System.out.println(form);
+ 
+         return "member/login";
+     }
+-    @GetMapping("/member/list")
+-    public String members(Model model){
++
++    @GetMapping("/list") // /member/list
++    public String members(Model model) {
+ 
+         List<Member> members = new ArrayList<>();
+-        for (int i = 1; i <=10; i++) {
++        for (int i = 1; i <= 10; i++) {
+             Member member = Member.builder()
+                     .userNo(Long.valueOf(i))
+                     .userPw("1234")
+-                    .userId("user"+i)
+-                    .userNm("사용자"+i)
+-                    .email("user"+i+"@test.org")
++                    .userId("user" + i)
++                    .userNm("사용자" + i)
++                    .email("user" + i + "@test.org")
+                     .regDt(LocalDateTime.now())
+                     .build();
+             members.add(member);
+         }
+-        model.addAttribute("members",members);
++
++        model.addAttribute("members", members);
+ 
+         return "member/list";
+     }
+Index: ../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestLogin.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controllers.member;\r\n\r\npublic record RequestLogin(\r\n        String userId,\r\n        String userPw\r\n)\r\n{}\r\n
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestLogin.java b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestLogin.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestLogin.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestLogin.java	
+@@ -3,5 +3,4 @@
+ public record RequestLogin(
+         String userId,
+         String userPw
+-)
+-{}
++) {}
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestJoin.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controllers.member;\r\n\r\nimport lombok.Data;\r\n\r\n@Data\r\npublic class RequestJoin {\r\n    private String userId;\r\n    private String userPw;\r\n    private String confirmPw;\r\n    private String userNm;\r\n    private String email;\r\n    private boolean aBoolean;\r\n}\r\n
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestJoin.java b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestJoin.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestJoin.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/controllers/member/RequestJoin.java	
+@@ -1,13 +1,33 @@
+ package controllers.member;
+ 
++import jakarta.validation.constraints.AssertTrue;
++import jakarta.validation.constraints.Email;
++import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.Size;
+ import lombok.Data;
+ 
++import java.util.List;
++
+ @Data
+ public class RequestJoin {
++    @NotBlank
++    @Size(min=6)
+     private String userId;
++
++    @NotBlank
++    @Size(min = 8)
+     private String userPw;
++
++    @NotBlank
+     private String confirmPw;
++    @NotBlank
+     private String userNm;
++
++    @Email
+     private String email;
+-    private boolean aBoolean;
+-}
++
++    @AssertTrue
++    private boolean agree;
++
++
++}
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/login.html
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/login.html b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/login.html
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/login.html	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/login.html	
+@@ -1,0 +1,1 @@
++<h1>로그인</h1>
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/main/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\"\r\n      xmlns:layout=\"http://www.ultraq.net.nz/thymeleaf/layout\"\r\n      layout:decorate=\"~{layouts/common}\">\r\n\r\n<th:block layout:fragment=\"addCss\">\r\n    <link rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/css/main.css}\">\r\n</th:block>\r\n\r\n<th:block layout:fragment=\"addScript\">\r\n    <script th:src=\"@{/js/main.js}\"></script>\r\n</th:block>\r\n<main layout:fragment=\"content\">\r\n    <h1>메인페이지 본문...</h1>\r\n</main>\r\n\r\n</html>
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/main/index.html b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/main/index.html
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/main/index.html	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/main/index.html	
+@@ -10,6 +10,7 @@
+ <th:block layout:fragment="addScript">
+     <script th:src="@{/js/main.js}"></script>
+ </th:block>
++
+ <main layout:fragment="content">
+     <h1>메인페이지 본문...</h1>
+ </main>
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\"\r\n      xmlns:layout=\"http://www.ultraq.net.nz/thymeleaf/layout\"\r\n      layout:decorate=\"!{layouts/comon}\">\r\n<main layout:fragment=\"content\">\r\n    <h1>회원가입</h1>\r\n</main>\r\n\r\n</html>
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/member/join.html	
+@@ -1,9 +1,62 @@
+ <!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+-      layout:decorate="!{layouts/comon}">
++      layout:decorate="~{layouts/common}">
++
+ <main layout:fragment="content">
+-    <h1>회원가입</h1>
++    <h1 th:text="#{회원가입}"></h1>
++
++    <form method="post" th:action="@{/member/join}" th:object="${requestJoin}">
++        <dl>
++            <dt th:text="#{아이디}"></dt>
++            <dd>
++                <input type="text" name="userId" th:field="*{userId}">
++                <div th:each="err : ${#fields.errors('userId')}" th:text="${err}"></div>
++            </dd>
++        </dl>
++
++        <dl>
++            <dt th:text="#{비밀번호}"></dt>
++            <dd>
++                <input type="password" name="userPw" th:field="*{userPw}">
++                <div th:each="err : ${#fields.errors('userPw')}" th:text="${err}"></div>
++            </dd>
++        </dl>
++        <dl>
++            <dt th:text="#{비밀번호_확인}"></dt>
++            <dd>
++                <input type="password" name="confirmPw" th:field="*{confirmPw}">
++                <div th:each="err : ${#fields.errors('confirmPw')}" th:text="${err}"></div>
++            </dd>
++        </dl>
++
++        <dl>
++            <dt th:text="#{회원명}"></dt>
++            <dd>
++                <input type="text" name="userNm" th:field="*{userNm}">
++                <div th:each="err : ${#fields.errors('userNm')}" th:text="${err}"></div>
++
++            </dd>
++        </dl>
++
++        <dl>
++            <dt th:text="#{이메일}"></dt>
++            <dd>
++                <input type="text" name="email" th:field="*{email}">
++                <div th:each="err : ${#fields.errors('email')}" th:text="${err}"></div>
++
++            </dd>
++        </dl>
++
++        <div>
++            <input type="checkbox" name="agree" value="true" id="agree">
++            <label for="agree" th:text="#{회원가입_약관에_동의합니다.}"></label>
++            <div th:each="err : ${#fields.errors('agree')}" th:text="${err}"></div>
++
++        </div>
++
++        <button type="submit" th:text="#{가입하기}"></button>
++    </form>
+ </main>
+ 
+ </html>
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/layouts/common.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\"\r\n      xmlns:layout=\"http://www.ultraq.net.nz/thymeleaf/layout\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title th:if=\"${pageTitle !=null}\">사이트 제목...</title>\r\n    <link rel=\"stylesheet\" type=\"text/css\" th:href=\"@{/css/style.css}\">\r\n    <link rel=\"stylesheet\" type=\"text/css\"\r\n          th:each=\"path : ${addCss}\" th:href=\"@{/css/{path}.css(path=${path})}\">\r\n\r\n    <th:block layout:fragment=\"addCss\"></th:block>\r\n\r\n    <script th:src=\"@{/js/common.js}\"></script>\r\n\r\n    <script th:each=\"path : ${addScript}\" th:src=\"@{/js/{path}}.js(path=${path})\"></script>\r\n    <th:block layout:fragment=\"addCss\"></th:block>\r\n\r\n</head>\r\n<body>\r\n<header th:replace=\"~{outlines/header::common}\"></header>\r\n<main layout:fragment=\"content\"></main>\r\n<footer th:replace=\"~{outlines/footer::common}\"></footer>\r\n</body>\r\n</html>
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/layouts/common.html b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/layouts/common.html
+--- a/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/layouts/common.html	
++++ b/../../3.스프링/spring_study/exam07/src/main/webapp/WEB-INF/templates/layouts/common.html	
+@@ -3,18 +3,16 @@
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+ <head>
+     <meta charset="UTF-8">
+-    <title th:if="${pageTitle !=null}">사이트 제목...</title>
++    <title th:if="${pageTitle != null}" th:text="${pageTitle}"></title>
+     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+     <link rel="stylesheet" type="text/css"
+-          th:each="path : ${addCss}" th:href="@{/css/{path}.css(path=${path})}">
+-
++          th:each="path : ${addCss}" th:href="@{/css/{file}.css(file=${path})}">
+     <th:block layout:fragment="addCss"></th:block>
+ 
+     <script th:src="@{/js/common.js}"></script>
+ 
+-    <script th:each="path : ${addScript}" th:src="@{/js/{path}}.js(path=${path})"></script>
+-    <th:block layout:fragment="addCss"></th:block>
+-
++    <script th:each="path : ${addScript}" th:src="@{/js/{file}.js(file=${path})}"></script>
++    <th:block layout:fragment="addScript"></th:block>
+ </head>
+ <body>
+ <header th:replace="~{outlines/header::common}"></header>
+Index: ../../3.스프링/spring_study/exam07/src/main/java/models/member/Member.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package models.member;\r\n\r\nimport lombok.Builder;\r\nimport lombok.Data;\r\n\r\nimport java.time.LocalDateTime;\r\n\r\n@Data @Builder\r\npublic class Member {\r\n\r\n    private long userNo;\r\n    private String userId;\r\n    private String userPw;\r\n    private String userNm;\r\n    private String email;\r\n    private LocalDateTime regDt;\r\n    private LocalDateTime modDt;\r\n}\r\n
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/models/member/Member.java b/../../3.스프링/spring_study/exam07/src/main/java/models/member/Member.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/models/member/Member.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/models/member/Member.java	
+@@ -7,7 +7,6 @@
+ 
+ @Data @Builder
+ public class Member {
+-
+     private long userNo;
+     private String userId;
+     private String userPw;
+@@ -15,4 +14,4 @@
+     private String email;
+     private LocalDateTime regDt;
+     private LocalDateTime modDt;
+-}
++}
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/java/configs/ControllerConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package configs;\r\n\r\nimport controllers.HelloController;\r\nimport controllers.member.MemberController;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.ComponentScan;\r\nimport org.springframework.context.annotation.Configuration;\r\n\r\n@Configuration\r\n@ComponentScan(\"controllers\")\r\n\r\npublic class ControllerConfig {\r\n\r\n    @Bean\r\n    public HelloController helloController() {\r\n        return new HelloController();\r\n    }\r\n    @Bean\r\n    public MemberController memberController(){\r\n        return new MemberController();\r\n    }\r\n}
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/configs/ControllerConfig.java b/../../3.스프링/spring_study/exam07/src/main/java/configs/ControllerConfig.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/configs/ControllerConfig.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/configs/ControllerConfig.java	
+@@ -10,7 +10,7 @@
+ @ComponentScan("controllers")
+ 
+ public class ControllerConfig {
+-
++/*
+     @Bean
+     public HelloController helloController() {
+         return new HelloController();
+@@ -18,5 +18,5 @@
+     @Bean
+     public MemberController memberController(){
+         return new MemberController();
+-    }
++    }*/
+ }
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/java/configs/MvcConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package configs;\r\n\r\nimport commons.Utils;\r\nimport nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.ApplicationContext;\r\nimport org.springframework.context.MessageSource;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.context.support.ResourceBundleMessageSource;\r\nimport org.springframework.web.servlet.config.annotation.*;\r\nimport org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;\r\nimport org.thymeleaf.spring6.SpringTemplateEngine;\r\nimport org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;\r\nimport org.thymeleaf.spring6.view.ThymeleafViewResolver;\r\n\r\n@Configuration\r\n@EnableWebMvc\r\npublic class MvcConfig implements WebMvcConfigurer {\r\n\r\n    @Autowired\r\n    private ApplicationContext applicationContext;\r\n\r\n    @Override\r\n    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {\r\n        configurer.enable();\r\n        // 모든 요청 -> 컨트롤러 빈, 없는 경우 -> 정적 자원 경로(css, js, 이미지)\r\n\r\n    }\r\n\r\n    @Override\r\n    public void addResourceHandlers(ResourceHandlerRegistry registry) {\r\n        registry.addResourceHandler(\"/**\") // 모든 경로\r\n                .addResourceLocations(\"classpath:/static/\");\r\n    }\r\n\r\n    @Override\r\n    public void addViewControllers(ViewControllerRegistry registry) {\r\n        registry.addViewController(\"/\")\r\n                .setViewName(\"main/index\");\r\n    }\r\n\r\n    @Bean\r\n    public SpringResourceTemplateResolver templateResolver() {\r\n        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();\r\n        templateResolver.setApplicationContext(applicationContext);\r\n        templateResolver.setPrefix(\"/WEB-INF/templates/\");\r\n        templateResolver.setSuffix(\".html\");\r\n        templateResolver.setCacheable(false);\r\n        // true -> 최초 로딩시 번역, 다음 요청시에는 기존 파일을 그대로 사용 (실 사용중 서버)\r\n        // false -> 매번 요청시마다 다시 번역 (개발 중)\r\n\r\n        return templateResolver;\r\n    }\r\n\r\n    @Bean\r\n    public SpringTemplateEngine templateEngine() {\r\n        SpringTemplateEngine templateEngine = new SpringTemplateEngine();\r\n        templateEngine.setTemplateResolver(templateResolver());\r\n        templateEngine.setEnableSpringELCompiler(true);\r\n        templateEngine.addDialect(new Java8TimeDialect()); // Date Time API(java.time 패키지) - #temporals\r\n        templateEngine.addDialect(new LayoutDialect()); // 레이아웃 기능 추가\r\n        return templateEngine;\r\n    }\r\n\r\n    @Bean\r\n    public ThymeleafViewResolver thymeleafViewResolver() {\r\n        ThymeleafViewResolver resolver = new ThymeleafViewResolver();\r\n        resolver.setContentType(\"text/html\");\r\n        resolver.setCharacterEncoding(\"utf-8\");\r\n        resolver.setTemplateEngine(templateEngine());\r\n        return resolver;\r\n    }\r\n\r\n    @Override\r\n    public void configureViewResolvers(ViewResolverRegistry registry) {\r\n        registry.viewResolver(thymeleafViewResolver());\r\n    }\r\n\r\n    @Bean\r\n    public MessageSource messageSource() {\r\n        ResourceBundleMessageSource ms = new ResourceBundleMessageSource();\r\n        ms.setDefaultEncoding(\"UTF-8\");\r\n        ms.setBasenames(\"messages.commons\");\r\n\r\n        return ms;\r\n    }\r\n\r\n    @Bean\r\n    public Utils utils() {\r\n        return new Utils();\r\n    }\r\n}
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/configs/MvcConfig.java b/../../3.스프링/spring_study/exam07/src/main/java/configs/MvcConfig.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/configs/MvcConfig.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/configs/MvcConfig.java	
+@@ -82,7 +82,7 @@
+         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
+         ms.setDefaultEncoding("UTF-8");
+         ms.setBasenames("messages.commons");
+-
++        ms.setBasenames("messages.commons", "messages.validations");
+         return ms;
+     }
+ 
+Index: ../../3.스프링/spring_study/exam07/src/main/java/controllers/HelloController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package controllers;\r\n\r\nimport jakarta.servlet.http.HttpServletRequest;\r\nimport jakarta.servlet.http.HttpServletResponse;\r\nimport jakarta.servlet.http.HttpSession;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\nimport org.springframework.web.servlet.ModelAndView;\r\n\r\n@Controller\r\npublic class HelloController {\r\n\r\n    @GetMapping(\"/hello\")\r\n    public String hello(@RequestParam(value = \"name\",required = false) String nm, Model model) {\r\n\r\n        model.addAttribute(\"name\", nm);\r\n\r\n        return \"hello\";\r\n    }\r\n\r\n\r\n    /*\r\n    @GetMapping(\"/hello\")\r\n    public String hello(HttpServletRequest request,\r\n                        HttpServletResponse response, HttpSession session) {\r\n\r\n        System.out.println(\"request : \" + request);\r\n        System.out.println(\"response : \" + response);\r\n        System.out.println(\"session : \" + session);\r\n\r\n        //System.out.println(name + \",\" + num);\r\n        return \"hello\"; // /WEB-INF/templates/hello.jsp\r\n    }\r\n    */\r\n    /*\r\n    @GetMapping(\"/hello\")\r\n    public ModelAndView hello() {\r\n        ModelAndView mv = new ModelAndView();\r\n        // request.setAttribute(\"message\", \"안녕하세요.\");\r\n        mv.addObject(\"message\", \"안녕하세요.\");\r\n        mv.setViewName(\"hello\"); // /WEB-INF/templates/hello.jsp\r\n\r\n        return mv;\r\n    }\r\n     */\r\n}
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/java/controllers/HelloController.java b/../../3.스프링/spring_study/exam07/src/main/java/controllers/HelloController.java
+--- a/../../3.스프링/spring_study/exam07/src/main/java/controllers/HelloController.java	
++++ b/../../3.스프링/spring_study/exam07/src/main/java/controllers/HelloController.java	
+@@ -13,7 +13,7 @@
+ public class HelloController {
+ 
+     @GetMapping("/hello")
+-    public String hello(@RequestParam(value = "name",required = false) String nm, Model model) {
++    public String hello(@RequestParam(name="name", defaultValue="기본값") String nm, Model model) {
+ 
+         model.addAttribute("name", nm);
+ 
+Index: ../../3.스프링/spring_study/exam07/src/main/resources/messages/commons.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>ì\u0095\u0084ì\u009D´ë\u0094\u0094=ê³\u0084ì \u0095\r\ní\u009A\u008Cì\u009B\u0090ëª\u0085=í\u009A\u008Cì\u009B\u0090ëª\u0085\r\nLOGIN_MSG ={0}({1})ë\u008B\u0098 ë¡\u009Cê·¸ì\u009D¸...
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/resources/messages/commons.properties b/../../3.스프링/spring_study/exam07/src/main/resources/messages/commons.properties
+--- a/../../3.스프링/spring_study/exam07/src/main/resources/messages/commons.properties	
++++ b/../../3.스프링/spring_study/exam07/src/main/resources/messages/commons.properties	
+@@ -1,3 +1,3 @@
+ ìì´ë=ê³ì 
+ íìëª=íìëª
+-LOGIN_MSG ={0}({1})ë ë¡ê·¸ì¸...
+\ No newline at end of file
++LOGIN_MSG={0}({1})ë ë¡ê·¸ì¸...
+\ No newline at end of file
+Index: ../../3.스프링/spring_study/exam07/src/main/resources/static/css/style.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>body { background: orange; }
+===================================================================
+diff --git a/../../3.스프링/spring_study/exam07/src/main/resources/static/css/style.css b/../../3.스프링/spring_study/exam07/src/main/resources/static/css/style.css
+--- a/../../3.스프링/spring_study/exam07/src/main/resources/static/css/style.css	
++++ b/../../3.스프링/spring_study/exam07/src/main/resources/static/css/style.css	
+@@ -1,1 +1,0 @@
+-body { background: orange; }
+\ No newline at end of file

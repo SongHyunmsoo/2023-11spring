@@ -64,6 +64,11 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**") // 모든 경로
                 .addResourceLocations("classpath:/static/");
+
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations("file:///c:/uploads/");
+    // 슬래시(/) 하나는 만자로 인식하기 떄문에 적을떄 한개를 더 적어야 한다
+        // 즉 2개의 슬래시를 써야 하기때문에 3개의 ///를 적는다
     }
 
     @Override
