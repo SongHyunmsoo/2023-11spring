@@ -9,7 +9,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
@@ -67,8 +69,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations("file:///c:/uploads/");
-    // 슬래시(/) 하나는 만자로 인식하기 떄문에 적을떄 한개를 더 적어야 한다
-        // 즉 2개의 슬래시를 써야 하기때문에 3개의 ///를 적는다
     }
 
     @Override
@@ -129,5 +129,16 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean
     public Utils utils() {
         return new Utils();
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer configurer() {
+        PropertySourcesPlaceholderConfigurer conf = new PropertySourcesPlaceholderConfigurer();
+
+        conf.setLocations(
+                new ClassPathResource("application.properties")
+        );
+
+        return conf;
     }
 }
