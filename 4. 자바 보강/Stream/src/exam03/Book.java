@@ -1,6 +1,5 @@
-package ex03;
+package exam03;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Book implements Comparable<Book> {
@@ -45,5 +44,8 @@ public class Book implements Comparable<Book> {
 
     public String getTitle() {
         return title;
+    }
+    public String getAuthor() {
+        return author;
     }
 }
