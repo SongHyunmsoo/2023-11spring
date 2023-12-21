@@ -1,5 +1,6 @@
-package org.choongang.entties;
+package org.choongang.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class Member {
     @Id // Primary Key : 기본키
     private long userNo;
     private String userId;
+    @JsonIgnore
     private String userPw;
     private String userNm;
     private String email;

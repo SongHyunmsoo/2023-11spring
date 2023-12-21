@@ -1,7 +1,7 @@
 package org.choongang.tests;
 
 import lombok.extern.slf4j.Slf4j;
-import org.choongang.entties.Member;
+import org.choongang.entities.Member;
 import org.choongang.repositories.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
