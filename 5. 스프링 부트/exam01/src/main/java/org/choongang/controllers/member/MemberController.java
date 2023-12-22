@@ -17,7 +17,7 @@ public class MemberController {
     @GetMapping("/join")
     public String join() {
         log.info("로그 메세지!");
-        log.info("로그{},{}","값1","값2");
+        log.info("로그 {}, {}", "값1", "값2");
         return "member/join";
     }
 
@@ -33,7 +33,6 @@ public class MemberController {
                 .regDt(LocalDateTime.now())
                 .modDt(LocalDateTime.now())
                 .build();
-
 
         return member;
     }
